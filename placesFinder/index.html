@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>wo was essen</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-sm bg-light justify-content-center">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <label>wo / was essen wir denn heute</label>
+      </li>
+    </ul>
+  </nav>
+  <br>
+
+  <div class="container">
+    <h3>wo / was essen wir denn heute</h3>
+    <h5>Kategorien - FILTER</h5>
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-default" id="btn_Alles" onclick="changebtncolor('btn_Alles');">Alles</button>
+      <button type="button" class="btn btn-default" id="btn_Burger" onclick="changebtncolor('btn_Burger');">Burger</button>
+      <button type="button" class="btn btn-default" id="btn_Pizza" onclick="changebtncolor('btn_Pizza');">Pizza / Pasta</button>
+      <button type="button" class="btn btn-default" id="btn_Asiatisch" onclick="changebtncolor('btn_Asiatisch');">Asiatisch</button>
+      <button type="button" class="btn btn-default" id="btn_Hausmannskost" onclick="changebtncolor('btn_Hausmannskost');">Hausmannskost</button>
+      <button type="button" class="btn btn-default" id="btn_Sonstiges" onclick="changebtncolor('btn_Sonstiges');">Sonstiges</button>
+    </div>
+    <div class="col-xs-6">
+      <h5>Entfernung</h5>
+      <button type="button" class="btn btn-default">Egal</button>
+      <button type="button" class="btn btn-default">Nicht so weit weg</button>
+      <button type="button" class="btn btn-default">Ganz nah dran</button>
+    </div>
+    <div class="col-xs-6">
+      <h5>Preis</h5>
+      <button type="button" class="btn btn-default">Egal</button>
+      <button type="button" class="btn btn-default">Nicht zu viel</button>
+      <button type="button" class="btn btn-default">Ende des Monats</button>
+    </div>
+    <div class="col-xs-12">
+      <h5>Veggietauglich</h5>
+      <button type="button" class="btn btn-default">Egal</button>
+      <button type="button" class="btn btn-default">Nicht so weit weg</button>
+      <button type="button" class="btn btn-default">Muss ganz lecker sein</button>
+    </div>
+    <div class="form-group col-xs-12">
+      <label for="Ergebnisse">Ergebnisse</label>
+      <textarea class="form-control" rows="7" id="Ergebnisse"></textarea>
+    </div>
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-default">Reset</button>
+      <button type="button" class="btn btn-default">Randomize</button>
+
+    </div>
+  </div>
+  <script>
+    var category_arr=[];
+    function changebtncolor(btn_var){
+      var category_str="";
+      var distance_str=1;
+      var price_str=1;
+      var veggie_str=1;
+      var class_var= $('#'+btn_var).attr("class");
+      var n = class_var.includes("default");
+      if(n==true){
+        category_arr.push(btn_var.substr(4, btn_var.length));
+        $('#'+btn_var).removeClass('btn-default').addClass("btn-danger");
+      }else{
+        category_arr.splice(category_arr.indexOf(btn_var.substr(4, btn_var.length)), 1);
+        $('#'+btn_var).removeClass('btn-danger').addClass("btn-default");
+      }  
+     
+      for(var i=0;i<category_arr.length;i++){
+        category_str=category_str+category_arr[i]+",";
+      }
+      category_str=category_str.slice(0, -1);
+      senddata(category_str,distance_str,price_str,veggie_str);
+      
+      
+    }
+    function senddata(category_str_var,distance_str_var,price_str_var,veggie_str_var){
+      $.ajax({
+          method: "GET",
+          contentType: "application/json",
+          url: "http://localhost:3000/?category="+category_str_var+"&distance="
+          +distance_str_var+"&price="+price_str_var+"&veggie="+veggie_str_var+"",
+          dataType: "json",
+          success: function () {
+            $("#Ergebnisse").val(data);
+          },
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $("#Ergebnisse").val("server error");
+          }
+        });   
+    }
+
+
+  </script>
+</body>
+
+</html>
